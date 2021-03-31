@@ -1,10 +1,25 @@
 from math import radians, cos, sin, asin, sqrt
 
 def haversine(lon1, lat1, lon2, lat2):
-    """
-    Calculate the great circle distance between two points 
-    on the earth (specified in decimal degrees)
-    """
+    """Calculate the distance in km between 2 geograhical coordinates
+
+    Parameters
+    ----------
+    lon1 : float
+        Longitude of the first point
+    lat1 : float
+        Latitude of the second point
+    lon2 : float
+        Longitude of the second point
+    lat2 : float
+        Latitude of the second point
+
+    Returns
+    -------
+    float
+        Distance in km
+    """    
+
     # convert decimal degrees to radians 
     lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
 
@@ -17,6 +32,24 @@ def haversine(lon1, lat1, lon2, lat2):
     return c * r
 
 def calc_xydist(lon1, lat1, lon2, lat2):
+    """Calculate the orthogonal x and y distances in km between 2 geographical coordinates
+
+    Parameters
+    ----------
+    lon1 : float
+        Longitude of the first point
+    lat1 : float
+        Latitude of the second point
+    lon2 : float
+        Longitude of the second point
+    lat2 : float
+        Latitude of the second point
+
+    Returns
+    -------
+    float
+        x and y distances in km
+    """    
 
     x_dist = haversine(lon1, lat1, lon2, lat1)
     y_dist = haversine(lon1, lat1, lon1, lat2)
