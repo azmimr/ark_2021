@@ -1,0 +1,35 @@
+@startuml C4_Elements
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_TOP_DOWN()
+' LAYOUT_WITH_LEGEND()
+
+' Person(person, "User")
+
+System_Boundary(c1, "ARK"){
+
+    ComponentDb(resale_db, "Data", "CSV Files", "Resale transaction data")
+    ComponentDb(aux_db, "Data", "CSV Files", "Auxiliary data related to amenities e.g. schools, MRT, markets")
+    ComponentDb(resale2_db, "Data", "CSV Files", "Resale transaction data with distance features")
+
+
+    Component(eda, "EDA", "Jupyter Notebook", "Exploratory Data Analysis on the transactions data")
+
+    Component(dist_features,"Feature Generation", "Jupyter Notebooks", "Generates distance based features from property to various amenities")
+
+    Component(model_exp,"Model Experimentation", "Jupyter Notebooks", "TODO")
+    
+    Component(model_final,"Model Pipeline", "Jupyter Notebooks", "TODO")
+
+}
+
+' Rel(person, eda, )
+Rel(resale_db, eda, " ")
+Rel_R(resale_db, dist_features, " ")
+Rel_L(aux_db, dist_features," ")
+Rel(dist_features, resale2_db, " ")
+
+Rel(resale2_db, model_exp, " ")
+Rel(resale2_db, model_final, " ")
+
+@enduml
