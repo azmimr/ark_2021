@@ -1,9 +1,9 @@
 # ARK
 
 ## Team
-- Azmi Mohamed Ridwan
-- Raimi Karim
-- Kenneth Wong
+- Raimi bin Karim (A0082893R)
+- Azmi bin Mohamed Ridwan (A0225575Y)
+- Wang Tian Ming Kenneth (A0116351R)
 
 ## Introduction
 Singapore has one of the most successful government housing programs in the [world](https://blogs.worldbank.org/sustainablecities/what-about-singapore-lessons-best-public-housing-program-world). According to the latest government [statistics](https://www.singstat.gov.sg/find-data/search-by-theme/households/households/latest-data), 78.7% of all households in Singapore live in government housing vis-a-vis Housing Development Board (HDB) properties.
