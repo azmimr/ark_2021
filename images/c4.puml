@@ -1,35 +1,52 @@
 @startuml C4_Elements
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
 
-LAYOUT_TOP_DOWN()
+LAYOUT_LEFT_RIGHT()
+' LAYOUT_TOP_DOWN()
 ' LAYOUT_WITH_LEGEND()
 
 ' Person(person, "User")
+AddTagSupport("pgm", $bgColor="#00da0d")
 
 System_Boundary(c1, "ARK"){
 
-    ComponentDb(resale_db, "Data", "CSV Files", "Resale transaction data")
-    ComponentDb(aux_db, "Data", "CSV Files", "Auxiliary data related to amenities e.g. schools, MRT, markets")
-    ComponentDb(resale2_db, "Data", "CSV Files", "Resale transaction data with distance features")
+    ComponentDb(resale_db, "Data", "train.csv", "Resale transaction data")
+    ComponentDb(aux_db, "Data", "Multiple CSV Files", "Auxiliary data related to amenities e.g. schools, MRT, markets")
+    ComponentDb(resale2_db, "Data", "train_wdistfeatures.csv", "Resale transaction data with distance features")
 
 
-    Component(eda, "EDA", "Jupyter Notebook", "Exploratory Data Analysis on the transactions data")
+    Component(eda, "EDA", "eda.ipynb", "Exploratory Data Analysis on the transactions data", $tags="pgm")
 
-    Component(dist_features,"Feature Generation", "Jupyter Notebooks", "Generates distance based features from property to various amenities")
+    Component(dist_features,"Feature Engineering", "create_dist_features.py", "Generates distance based features from property to various amenities", $tags="pgm")
 
-    Component(model_exp,"Model Experimentation", "Jupyter Notebooks", "TODO")
+    Component(model_exp1,"Model Experimentation 1", "experiment_1.ipynb", "Model experimentation using different experimentation", $tags="pgm")
+
+    Component(model_exp2,"Model Experimentation 2", "experiment_2.ipynb", "Model experimentation focusing on Hyperparameter tuning", $tags="pgm")
     
-    Component(model_final,"Model Pipeline", "Jupyter Notebooks", "TODO")
+    Component(model_pipeline,"Model Pipeline", "training.py", "Final model training flow with optimized hyperparamters", $tags="pgm")
+
+    Component(model_final,"Final Model", "model.pickle", "Saved model")
+
+    Component(model_inference,"Model Inference", "inference.py", "Use model to predict prices on new data. This script includes all the necessary pre-processing required by the model.", $tags="pgm")
+
+
 
 }
 
 ' Rel(person, eda, )
-Rel(resale_db, eda, " ")
-Rel_R(resale_db, dist_features, " ")
-Rel_L(aux_db, dist_features," ")
-Rel(dist_features, resale2_db, " ")
+Rel(resale_db, eda, "Is read by")
+Rel_R(resale_db, dist_features, "Is read by")
+Rel_L(aux_db, dist_features,"Is read by")
+Rel(dist_features, resale2_db, "Creates")
 
-Rel(resale2_db, model_exp, " ")
-Rel(resale2_db, model_final, " ")
+Rel(resale2_db, model_pipeline, "Is read by")
+Rel_R(resale2_db, model_exp1, "Is read by")
+Rel(resale2_db, model_exp2, "Is read by")
+
+
+Rel_L(model_pipeline, model_final, "Creates")
+Rel_L(model_final, model_inference, "Is read by")
+
+
 
 @enduml

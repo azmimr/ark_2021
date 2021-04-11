@@ -1,3 +1,5 @@
+import sys
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import math
@@ -5,8 +7,8 @@ from tqdm import tqdm
 
 import pandas_lightning
 
-from utils import haversine, calc_xydist
-from quadtree import Point, Rect, QuadTree
+from .utils import haversine, calc_xydist
+from .quadtree import Point, Rect, QuadTree
 
 # CONSTANTS
 REF_MIN_LAT = 1.2203795117581597 # Reference min lat
@@ -114,19 +116,29 @@ def find_features2(row, qtree, radius = 3):
 
     return pd.Series([count_2km, count_1km, nearest_dist])
 
-def main():
+def main(filename):
+
+    file_path = Path(filename)
+    print(f"Using data file: {file_path}")
+
+    if not file_path.is_file():
+        raise FileNotFoundError(f"Data file {filename} not found!")
+
+    ############################################################################
+    ############################################################################
 
     print("Creating amenities Quadtree data ....")
-    aux_data_path = '../data/auxiliary-data/' 
+    aux_data_path = Path.cwd() / 'data/auxiliary-data/' 
     
-    mrt_qtree, _ = create_amenity_quadtree(aux_data_path + 'sg-train-stations.csv', use_long_name=True)
-    prisch_qtree, _ = create_amenity_quadtree(aux_data_path + 'sg-primary-schools.csv')
-    secsch_qtree, _ = create_amenity_quadtree(aux_data_path + 'sg-secondary-schools.csv')
-    markets_qtree, _ = create_amenity_quadtree(aux_data_path + 'sg-gov-markets-hawker-centres.csv')
-    malls_qtree, _ = create_amenity_quadtree(aux_data_path + 'sg-shopping-malls.csv')
-    comm_qtree, _ = create_amenity_quadtree(aux_data_path + 'sg-commerical-centres.csv', use_long_name=True)
+    mrt_qtree, _ = create_amenity_quadtree(aux_data_path / 'sg-train-stations.csv', use_long_name=True)
+    prisch_qtree, _ = create_amenity_quadtree(aux_data_path / 'sg-primary-schools.csv')
+    secsch_qtree, _ = create_amenity_quadtree(aux_data_path / 'sg-secondary-schools.csv')
+    markets_qtree, _ = create_amenity_quadtree(aux_data_path / 'sg-gov-markets-hawker-centres.csv')
+    malls_qtree, _ = create_amenity_quadtree(aux_data_path / 'sg-shopping-malls.csv')
+    comm_qtree, _ = create_amenity_quadtree(aux_data_path / 'sg-commerical-centres.csv', use_long_name=True)
     
-    #  The value in dict is the search radius. should be larger for comm due to low quantity
+    #  The value in dict is the search radius in km. should be larger for comm due to low quantity
+    # Values chosen so as not to get 999 for nearest distance features i.e. nearest amenity not found
     amenities = {
         'mrt':5, 
         'prisch':5, 
@@ -135,11 +147,14 @@ def main():
         'malls':3, 
         'comm':10}
 
+    ############################################################################
+    ############################################################################
+
     print("Processing Data ....")
     print("Calc x,y and create empty features")
-    train_path = '../data/train.csv'
-    train_ = pd.read_csv(train_path)
-    train = train_.copy(
+    
+    train_ = pd.read_csv(file_path)
+    train = train_[:10].copy(
         
         ).lambdas(inplace=True).sapply(
         x = ("longitude", get_x),
@@ -152,15 +167,8 @@ def main():
         train[amenity + '_ndist'] = None 
 
     print("Calculating distance features")
-    tqdm.pandas(desc="my bar!")
-    # for idx, row in tqdm(train.iterrows()):
-    #     for amenity in amenities:
-           
-    #         a, b, c = find_features(eval(amenity+'_qtree'), row['x'], row['y'], amenities[amenity])
-            
-    #         train.loc[idx, amenity + '_2km'] = int(a)
-    #         train.loc[idx, amenity + '_1km'] = int(b)
-    #         train.loc[idx, amenity + '_ndist'] = float(c)
+    tqdm.pandas(desc="PROGRESS!")
+
     for amenity in amenities:
         train[[amenity + '_2km', amenity + '_1km', amenity + '_ndist']] = train.progress_apply(find_features2, args=(eval(amenity+'_qtree'), amenities[amenity]), axis=1)
 
@@ -169,8 +177,17 @@ def main():
             amenity + '_1km' : 'int32'
         })
 
-    train.to_csv('train_test.csv', index=False)
+    ############################################################################
+    ############################################################################
+    # Save out results
+
+    out_file_path = file_path.parent / (str(file_path.stem) + '_wdistfeatures' + str(file_path.suffix))
+    train.to_csv(out_file_path, index=False)
 
 
 if __name__ == '__main__':
-    main()
+    
+    if len(sys.argv) < 2:
+        exit("ERROR! Data file expected: python -m src.create_dist_features [filename]")
+
+    main(sys.argv[1])

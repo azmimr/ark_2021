@@ -39,13 +39,27 @@ Your environmnent is all setup!
 
 The above diagram illustrates the key components of this solution. To replicate the findings of this project, the following steps are required:
 
-1. To view or execute the various Jupyter notebooks, a server must be running. Run the following command in the main directory of the project folder. 
+### Jupyter Notebook
+
+1. To view or execute the various Jupyter notebooks, a server must be running. Start a terminal and run the following command in the main directory of the project folder. 
 
 `> jupyter notebooks` or `> jupyter labs`
 
-2. Exploratory Data Analysis, `eda.ipynb`: This notebook blah, blah, blah
+2. Within Jupyter, open the Exploratory Data Analysis (EDA) notebook `eda.ipynb`. Run all the cells if necessary.
 
-3. Distance-based Feature generation, `xy.ipynb`: Using both the transaction and auxiliary data, 3 distance features are generated for each amenity type; a) Count of amenities within 2km, b) Count of amenities within 1km and c) Distance to closest amenity (in metres).
+3. To view the test code to create the distance-based features, open 'test_create_distance_features.ipynb`
+
+
+### Modelling Pipeline
+
+1. Distance-based Feature generation
+Using a terminal, run the following program in the main folder of the repository
+
+`> python -m src.create_dist_features data\train.csv`
+
+Where `data\train.csv` is the path to the raw data file.
+
+
 
 ## Notes
 
