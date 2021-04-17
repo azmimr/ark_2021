@@ -37,7 +37,7 @@ Run the following command:
 
 `> pip install git+https://github.com/remykarem/pandas-lightning#egg=pandas-lightning`
 
-This is a Python module created by one of our members (Raimi bin Karim) that wraps around Pandas to provide a simpler interface for some DataFrame operations.
+[Pandas-Lightning](https://pandas-lightning.readthedocs.io/en/latest/index.html) is a Python module created by one of our members (Raimi bin Karim) that wraps around Pandas to provide a simpler interface for some DataFrame operations.
 
 Congratulations! Your environmnent is all setup.
 
