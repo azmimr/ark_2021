@@ -1,0 +1,23 @@
+name: ark
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+- python=3.7.9
+- pip
+- matplotlib
+- pandas
+- numpy
+- scikit-learn
+- jupyterlab
+
+- pip:
+  - seaborn
+
+
+
+
+
+
+
+
