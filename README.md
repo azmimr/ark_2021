@@ -21,7 +21,7 @@ In order to run the various code scripts and notebooks, you will need to have in
 
 1. Clone a copy of this repository on your local system
 
-`> git clone link_to_git_repo`
+`> git clone https://github.com/azmimr/ark_2021.git`
 
 2. Create a new conda environment. This will install Python and the necessary libraries and packages to be able to run the various scripts and notebooks. A new environment named `ark` will be created.
 
@@ -31,7 +31,15 @@ In order to run the various code scripts and notebooks, you will need to have in
 
 `> conda activate ark`
 
-Your environmnent is all setup!
+4. Install pandas-lightning
+
+Run the following command:
+
+`> pip install git+https://github.com/remykarem/pandas-lightning#egg=pandas-lightning`
+
+This is a Python module created by one of our members (Raimi bin Karim) that wraps around Pandas to provide a simpler interface for some DataFrame operations.
+
+Congratulations! Your environmnent is all setup.
 
 ## How to Run
 
@@ -39,29 +47,42 @@ Your environmnent is all setup!
 
 The above diagram illustrates the key components of this solution. To replicate the findings of this project, the following steps are required:
 
-### Jupyter Notebook
+**NOTES** : Jupyter Notebook
 
-1. To view or execute the various Jupyter notebooks, a server must be running. Start a terminal and run the following command in the main directory of the project folder. 
+To view or execute the various Jupyter notebooks, a server must be running. Start a terminal and run the following command in the main directory of the project folder. 
 
-`> jupyter notebooks` or `> jupyter labs`
-
-2. Within Jupyter, open the Exploratory Data Analysis (EDA) notebook `eda.ipynb`. Run all the cells if necessary.
-
-3. To view the test code to create the distance-based features, open 'test_create_distance_features.ipynb`
+`> jupyter notebooks` or `> jupyter lab`
 
 
 ### Modelling Pipeline
 
-1. Distance-based Feature generation
+#### 1. Exploratory Data Analysis
+
+Within the Jupyter interface in a Web Browser, open the Exploratory Data Analysis (EDA) notebook `notebooks\eda.ipynb`. Run all the cells if necessary.
+
+#### 2. Distance-based Feature generation
 Using a terminal, run the following program in the main folder of the repository
 
 `> python -m src.create_dist_features data\train.csv`
 
 Where `data\train.csv` is the path to the raw data file.
 
+#### 3. Baseline Modelling
+
+Open `notebooks\experiment_1.ipynb` in a Jupyter instance to see the code for the base line models. These model use the basic features directly from the training data. The notebook includes some observations related to the feature importance and model performance.
+
+#### 4. Feature Engineering, Model Selection, Hyperparameter Tuning, Ensembling and Test Data Inference
+The last notebook `notebook\experiment_2.ipynb` is the following aspects of the project:
+
+- Feature Engineering: Using the data that includes feature-based features, create additional features
+- Feature Selection: Several different models were created using different algorithms
+- Model Ensembling: The final model was created by ensembling 
+- Inference on the test data for the Kaggle competition submission. Please apply the distance feature generation script (step 2) on the test data before ingesting into this notebook.
 
 
-## Notes
+## Conclusion
+
+For this project, we were able to achieve an RMSE error of S$16,317.19 for our final submitted model.
 
 
 
